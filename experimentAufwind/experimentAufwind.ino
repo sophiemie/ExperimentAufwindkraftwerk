@@ -4,19 +4,24 @@
 * 
 */
 
-#include <IRLibAll.h>
+#include <IRremote.h>
 
-IRsend mySender;
+int irPin = 2;  // Pin, an dem der OUT-Pin des VS1838B angeschlossen ist
 
 void setup() {
-  Serial.begin(9600);
+  pinMode(irPin, INPUT);    // Setze irPin als Eingang
+  Serial.begin(9600);       // Starte die serielle Kommunikation mit 9600 Baud
 }
 
 void loop() {
-  if (Serial.read() != -1) {
-    //send a code every time a character is received from the serial port
-    //Sony DVD power A8BCA
-    mySender.send(SONY,0xa8bca, 20);
-    Serial.println("Ausgabe erfolgt");
+  int irState = digitalRead(irPin); // Lese den Zustand des IR-Sensors
+
+  // Gebe den Zustand des IR-Sensors auf der seriellen Schnittstelle aus
+  if (irState == HIGH) {
+    Serial.println("1"); // IR-Signal erkannt
+  } else {
+    Serial.println("0"); // Kein IR-Signal erkannt
   }
+
+  delay(100); // Kurze Pause, um die Ausgabe lesbar zu machen
 }
